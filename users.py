@@ -27,3 +27,38 @@ def register():
     else:
         return jsonify({'valid': '0', 'msg': '用户已注册！'})
 
+@user_page.route('/user/<name>')
+def user(name):
+    # 查询数据库中用户名为name的User类对象
+    user = User.query.filter(User.name == name).first()
+    # 判断用户是否存在
+    if user:   # 该用户存在
+        collect_id_str = user.collect_id    # 获取当前用户收藏的房源ID
+        if collect_id_str:                  # 若不为空
+            collect_id_list = collect_id_str.split(',')
+            collect_house_list = []
+            # 根据房源ID获取对应的房源对象
+            for hid in collect_id_list:
+                house = House.query.get(int(hid))
+                # 将房源对象添加到列表中
+                collect_house_list.append(house)
+        else:                     # 若为空
+            collect_house_list = []
+
+        seen_id_str = user.seen_id       # 获取当前用户的浏览记录
+        if seen_id_str:
+            seen_id_list = seen_id_str.split(',')
+            seen_house_list = []
+            # 根据房源ID获取对应的房源对象
+            for hid in seen_id_list:
+                house = House.query.get(int(hid))
+                seen_house_list.append(house)
+        else:
+            seen_house_list = []
+        return render_template('user_page.html', user=user,
+                               collect_house_list=collect_house_list,
+                               seen_house_list=seen_house_list)
+    else:
+        # 重定向到首页
+        return redirect('/')
+    # 2021011125-杨高磊
