@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify
 from sqlalchemy import func
 
+from list_page import list_page
 from models import House
 
 # 创建蓝图，蓝图的名称为包的名称index_page
@@ -48,5 +49,19 @@ def search_kw():
             return jsonify({'code': 1, 'info': data})
         else:
             return jsonify({'code': 0, 'info': []})
+def deal_title_over(word):
+    if len(word) > 15:
+        return word[:15] + '...'  # 当房源标题长度大于15时，用省略号替换
+    else:
+        return word
 
+def deal_direction(word):
+    if len(word) == 0 or word is None:  # 房源朝向、交通条件为空时显示暂无信息
+        return '暂无信息！'
+    else:
+        return word
+
+#注册过滤器
+list_page.add_app_template_filter(deal_title_over, 'dealover')
+list_page.add_app_template_filter(deal_direction, 'dealdirection')
 # 2021011125-杨高磊

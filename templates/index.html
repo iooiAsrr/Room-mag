@@ -592,7 +592,20 @@
         });
     }
 
-
+// 单击检索项将其填入搜索框
+function info_to_txt() {
+    $('.li_style').on('click', function () {
+        // 实现了重复点击的初始化
+        if ($(this).hasClass('active')) {
+            $(this).removeClass('active');
+        }
+        $(this).addClass('active');
+        t_name = $(this).attr('title');
+        $('#txt').val('');
+        $('#txt').val(t_name);
+        $('#list').empty()
+    });
+}
 </script>
 
 
