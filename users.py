@@ -62,3 +62,29 @@ def user(name):
         # 重定向到首页
         return redirect('/')
     # 2021011125-杨高磊
+
+@user_page.route('/login', methods=['POST'])
+def login():
+    # 首先需要获取用户提交的信息用户的名字和密码
+    name = request.form['username']
+    password = request.form['password']
+    # 根据用户名进行校验
+    user = User.query.filter(User.name == name).first()
+    # 用户名存在的时候
+    if user:
+        # 判断用户输入的密码是否正确
+        if user.password == password:
+            # 将响应信息变化成JSON字符串
+            result = {'valid': '1', 'msg': user.name}
+            result_json = json.dumps(result)
+            # 构建返回数据
+            res = Response(result_json)
+            # 设置Cookie的过期时间
+            res.set_cookie('name', user.name, 3600 * 2)
+            return res
+        else:
+            return jsonify({'valid': '0', 'msg': '密码不正确！'})
+    # 用户不存在的时候
+    else:
+        return jsonify({'valid': '0', 'msg': '用户名不正确！'})
+# 2021011125-杨高磊
