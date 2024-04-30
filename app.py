@@ -1,6 +1,7 @@
 from flask import Flask
 from settings import Config, db
 from models import House
+from detail_page import detail_page
 from index_page import index_page
 from list_page import list_page
 # 2021011125杨高磊
@@ -16,6 +17,6 @@ db.init_app(app)
 #     return 'ok'
 app.register_blueprint(index_page)
 app.register_blueprint(list_page,url_prefix='/')
-
+app.register_blueprint(detail_page, url_prefix='/')
 if __name__ == '__main__':
     app.run(debug=True)

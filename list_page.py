@@ -13,13 +13,13 @@ def search_txt_info():
     if request.args.get('addr'):
         addr = request.args.get('addr')
         result = House.query.filter(House.address == addr).order_by(House.publish_time.desc()).all()
-        return render_template('search_list.html.bp', house_list=result)
+        return render_template('search_list.html', house_list=result)
 
     # 获取rooms户型字段的查询
     if request.args.get('rooms'):
         rooms_info = request.args.get('rooms')
         result = House.query.filter(House.rooms == rooms_info).order_by(House.publish_time.desc()).all()
-        return render_template('search_list.html.bp', house_list=result)
+        return render_template('search_list.html', house_list=result)
         return redirect(url_for('index_page.index'))
 #2021011125-杨高磊
 @list_page.route('/list/pattern/<int:page>')
