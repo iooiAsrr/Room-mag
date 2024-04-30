@@ -31,8 +31,16 @@ def return_new_list(page):
     result = House.query.order_by(
         House.publish_time.desc()).paginate(page = page, per_page=10)
     return render_template('list.html', house_list=result.items, page_num=result.page, total_num=total_num)
-
-
+#2021011125-杨高磊
+@list_page.route('/list/hot_house/<int:page>')
+def return_hot_list(page):
+    # 获取房源总数量
+    house_num = House.query.count()
+    # 计算总的页码数，向上取整
+    total_num = math.ceil(house_num / 10)
+    result = House.query.order_by(
+        House.page_views.desc()).paginate(page = page, per_page=10)
+    return render_template('list.html', house_list=result.items, page_num=result.page, total_num=total_num)
 
 
 
