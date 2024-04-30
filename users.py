@@ -88,3 +88,20 @@ def login():
     else:
         return jsonify({'valid': '0', 'msg': '用户名不正确！'})
 # 2021011125-杨高磊
+
+@user_page.route('/logout')
+def logout():
+    # 在Cookie中获取用户信息
+    name = request.cookies.get('name')
+    # 用户处于登录状态下
+    if name:
+        result = {'valid': '1', 'msg': '退出登录成功！'}
+        json_str = json.dumps(result)
+        res = Response(json_str)
+        # 删除用户的Cookie
+        res.delete_cookie('name')
+        return res
+    # 用户处于未登录状态下
+    else:
+        return jsonify({'valid': '0', 'msg': '未登录！'})
+    # 2021011125-杨高磊
