@@ -29,3 +29,21 @@ def return_pie_data(block):
     for one_house in result:
         data.append({'name': one_house[0], 'value': one_house[1]})
     return jsonify({'data': data})
+
+#2021011125-杨高磊
+# 实现本地区小区数量TOP20功能
+@detail_page.route('/get/columndata/<block>')
+def return_bar_data(block):
+    result = House.query.with_entities(House.address, func.count()).filter(House.block == block).group_by(
+        House.address).order_by(func.count().desc()).all()
+    name_list = []
+    num_list = []
+    for addr, num in result:
+        residence_name = addr.rsplit('-', 1)[1]
+        name_list.append(residence_name)
+        num_list.append(num)
+    if len(name_list) > 20:
+        data = {'name_list_x': name_list[:20], 'num_list_y': num_list[:20]}
+    else:
+        data = {'name_list_x': name_list, 'num_list_y': num_list}
+    return jsonify({'data': data})
