@@ -7,7 +7,7 @@ app.config.from_object(Config)
 db.init_app(app)
 @app.route('/')
 def test():
-
+#feasfasef
     # 查询第一条记录
     first_user = House.query.first()
     print(first_user)
