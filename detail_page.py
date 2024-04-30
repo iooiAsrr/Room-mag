@@ -1,5 +1,7 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from flask import Blueprint, render_template
+from sqlalchemy import func
+
 from models import House
 
 detail_page = Blueprint('detail_page', __name__)
@@ -16,3 +18,14 @@ def deal_traffic_txt(word):
     else:
         return word
 detail_page.add_app_template_filter(deal_traffic_txt, 'dealNone')
+
+#2021011125-杨高磊
+# 实现户型占比功能
+@detail_page.route('/get/piedata/<block>')
+def return_pie_data(block):
+    result = House.query.with_entities(House.rooms, func.count()).filter(House.block == block).group_by(
+        House.rooms).order_by(func.count().desc()).all()
+    data = []
+    for one_house in result:
+        data.append({'name': one_house[0], 'value': one_house[1]})
+    return jsonify({'data': data})
