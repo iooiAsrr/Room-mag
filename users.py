@@ -105,3 +105,76 @@ def logout():
     else:
         return jsonify({'valid': '0', 'msg': '未登录！'})
     # 2021011125-杨高磊
+
+@user_page.route('/modify/userinfo/<option>', methods=['POST'])
+def modify_info(option):
+    if option == 'name':
+        y_name = request.form['y_name']  # 获取旧的用户名
+        name = request.form['name']  # 获取新的用户名
+        # 查询用户是否存在
+        user = User.query.filter(User.name == y_name).first()
+        # 用户存在
+        if user:
+            # 更新昵称
+            user.name = name
+            db.session.commit()
+            result = {'ok': '1'}
+            json_str = json.dumps(result)
+            # 创建响应对象
+            res = Response(json_str)
+            res.set_cookie('name', user.name, 3600 * 2)
+            return res
+        # 用户不存在
+        else:
+            return jsonify({'ok': '0'})
+    elif option == 'addr':
+        # 获取用户名
+        y_name = request.form['y_name']
+        # 获取新的住址
+        addr = request.form['addr']
+        # 查询用户是否存在
+        user = User.query.filter(User.name == y_name).first()
+        # 用户存在
+        if user:
+            # 更新住址
+            user.addr = addr
+            db.session.commit()
+            # 返回JSON字符串
+            return jsonify({'ok': '1'})
+        # 用户不存在
+        else:
+            return jsonify({'ok': '0'})
+    elif option == 'password':
+        # 获取用户名
+        y_name = request.form['y_name']
+        # 获取新的密码
+        password = request.form['password']
+        # 查询用户是否存在
+        user = User.query.filter(User.name == y_name).first()
+        # 用户存在
+        if user:
+            # 更新密码
+            user.password = password
+            db.session.commit()
+            return jsonify({'ok': '1'})
+        # 用户不存在
+        else:
+            return jsonify({'ok': '0'})
+    elif option == 'email':
+        # 获取用户名
+        y_name = request.form['y_name']
+        # 获取新的邮箱
+        email = request.form['email']
+        # 查询用户是否存在
+        user = User.query.filter(User.name == y_name).first()
+        # 用户存在
+        if user:
+            # 更新邮箱
+            user.email = email
+            db.session.commit()
+            return jsonify({'ok': '1'})
+        # 用户不存在
+        else:
+            return jsonify({'ok': '0'})
+    return 'ok'
+# 2021011125-杨高磊
